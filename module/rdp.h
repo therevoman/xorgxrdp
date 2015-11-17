@@ -142,6 +142,8 @@ struct _rdpPointer
     int old_button_mask;
     int button_mask;
     DeviceIntPtr device;
+    int old_cursor_x;
+    int old_cursor_y;
 };
 typedef struct _rdpPointer rdpPointer;
 
@@ -297,6 +299,7 @@ struct _rdpRec
     OsTimerPtr xv_timer;
 
     copy_box_proc a8r8g8b8_to_a8b8g8r8_box;
+    copy_box_proc a8r8g8b8_to_nv12_box;
 
     /* multimon */
     int extra_outputs;
@@ -313,8 +316,13 @@ typedef struct _rdpRec * rdpPtr;
 
 struct _rdpGCRec
 {
+#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(1, 16, 99, 901, 0)
     GCFuncs *funcs;
     GCOps *ops;
+#else
+    const GCFuncs *funcs;
+    const GCOps *ops;
+#endif
 };
 typedef struct _rdpGCRec rdpGCRec;
 typedef struct _rdpGCRec * rdpGCPtr;
